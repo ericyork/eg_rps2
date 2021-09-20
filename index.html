@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rock, Paper, Scissors</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body {width:50%; margin: 3em auto;}
+    </style>
+  </head>
+  <body>
+    <h1>Rock, Paper, Scissors</h1>
+    <hr>
+    <h2>You pick:
+      <select name="rps" id="choice">
+        <option value="">Select One</option>
+        <option value="rock">Rock</option>
+        <option value="paper">Paper</option>
+        <option value="scissors">Scissors</option>
+      </select>
+      <button id="play" onclick="runGame()">Play</button>
+      <span id="error"></span>
+    </h2>
+    <h2>Opponent picks: <span id="opponent"></span></h2>
+    <h2>You <span id="result"></span>.</h2>
+    <p>You are <span id="wins">0</span> for <span id="games">0</span></p>
+    <!--loads js -->
+    <script defer>
+      // sets up and runs a game . . .
+      function runGame() {
+        // selects the select element in the document
+        const selector = document.querySelector('#choice');
+        // sets pPick to equal the value of the select element
+        let pPick = selector.value;
+        // generates a pseudo-random number between 1 and 3
+        let oNum = Math.floor(Math.random() * 3) + 1;
+        // matches the resultant number with an opponent's pick
+        if (oNum == 1) {
+          oPick = "rock";
+        } else if (oNum == 2) {
+          oPick = "paper";
+        } else if (oNum == 3) {
+          oPick = "scissors";
+        } else {
+          return console.log("Error"); // just in case ;)
+        };
+        // Game's main logic: if pPick is this, here are the results given oPick
+        // 3 choices each for player and opponent means 9 possible outcomes
+        if (pPick == "rock") {
+          switch (oPick) {
+            case "rock":
+              result = "tied";
+              break;
+            case "paper":
+              result = "lost";
+              break;
+            case "scissors":
+              result = "won";
+          };
+        } else if (pPick == "paper") {
+          switch (oPick) {
+            case "rock":
+              result = "won";
+              break;
+            case "paper":
+              result = "tied";
+              break;
+            case "scissors":
+              result = "lost";
+          };
+        } else if (pPick == "scissors") {
+          switch (oPick) {
+            case "rock":
+              result = "lost";
+              break;
+            case "paper":
+              result = "won";
+              break;
+            case "scissors":
+              result = "tied";
+          };
+        } else {
+          result = "didn't play";
+        };
+        // tracks number of games and increments when played
+        let games = sessionStorage.getItem("gameCount");
+        games++;
+        sessionStorage.setItem("gameCount", games);
+        // tracks number of wins and increments when a game is won
+        let wins = sessionStorage.getItem("winCount", 0);
+        if (result == "won") {
+          wins++;
+        } else if (wins == null) {
+          wins = 0;
+        }
+        sessionStorage.setItem("winCount", wins);
+        // Outputs the results of the variables
+        document.getElementById('opponent').innerHTML = oPick.charAt(0).toUpperCase() + oPick.slice(1);
+        document.getElementById('result').innerHTML = result;
+        document.getElementById('games').innerHTML = sessionStorage.getItem("gameCount");
+        document.getElementById('wins').innerHTML = sessionStorage.getItem("winCount");
+        // Logs results to the console
+        console.log("You pick " + pPick);
+        console.log("Opponent picks " + oPick);
+        console.log("You " + result);
+      }
+    </script>
+  </body>
+</html>
